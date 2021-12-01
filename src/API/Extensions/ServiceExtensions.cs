@@ -1,4 +1,5 @@
 using Contracts;
+using Infrastructure;
 using LoggerService;
 
 namespace API.Extensions;
@@ -19,4 +20,7 @@ public static class ServiceExtensions
 
     public static void ConfigureLoggerService(this IServiceCollection serviceCollection) =>
         serviceCollection.AddSingleton<ILoggerManager, LoggerManager>();
+
+    public static void ConfigureRepositoryManager(this IServiceCollection serviceCollection) =>
+        serviceCollection.AddScoped<IRepositoryManager, RepositoryManager>();
 }
