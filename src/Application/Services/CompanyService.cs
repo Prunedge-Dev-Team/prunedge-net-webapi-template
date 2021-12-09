@@ -1,7 +1,8 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
 using AutoMapper;
-using Contracts;
+using Infrastructure.Contracts;
+
 
 namespace Application.Services;
 

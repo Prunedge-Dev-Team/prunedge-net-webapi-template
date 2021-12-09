@@ -1,6 +1,6 @@
 using Application.Contracts;
 using AutoMapper;
-using Contracts;
+using Infrastructure.Contracts;
 
 namespace Application.Services;
 

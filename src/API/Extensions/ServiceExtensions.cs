@@ -1,9 +1,8 @@
 using Application.Contracts;
 using Application.Services;
-using Contracts;
 using Infrastructure;
+using Infrastructure.Contracts;
 using Infrastructure.Data.DbContext;
-using LoggerService;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions;

@@ -1,4 +1,4 @@
-namespace Contracts;
+namespace Infrastructure.Contracts;
 
 public interface IRepositoryManager
 {

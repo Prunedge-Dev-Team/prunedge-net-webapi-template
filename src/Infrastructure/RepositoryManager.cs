@@ -1,4 +1,4 @@
-using Contracts;
+using Infrastructure.Contracts;
 using Infrastructure.Data.DbContext;
 using Infrastructure.Repositories;
 

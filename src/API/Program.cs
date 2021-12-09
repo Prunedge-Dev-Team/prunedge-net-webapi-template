@@ -1,5 +1,5 @@
 using API.Extensions;
-using Contracts;
+using Infrastructure.Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 using Presentation;

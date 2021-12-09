@@ -1,6 +1,6 @@
 using System.Net;
-using Contracts;
 using Domain.Entities;
+using Infrastructure.Contracts;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace API.Extensions;
