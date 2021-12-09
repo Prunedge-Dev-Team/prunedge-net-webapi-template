@@ -37,4 +37,5 @@ public static class ServiceExtensions
             {
                 opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+    
 }
