@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
 using AutoMapper;
+using Domain.Exceptions;
 using Infrastructure.Contracts;
 
 
@@ -22,7 +23,14 @@ internal sealed class CompanyService : ICompanyService
     public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
     {
         var companies = _repository.Company.GetAllCompanies(trackChanges);
-        var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
-        return companiesDto;
+        return _mapper.Map<IEnumerable<CompanyDto>>(companies);
+    }
+
+    public CompanyDto GetCompany(Guid id, bool trackChanges)
+    {
+        var company = _repository.Company.GetCompany(id, trackChanges);
+        if(company is null) 
+            throw new CompanyNotFoundException(id);
+        return _mapper.Map<CompanyDto>(company);
     }
 }
