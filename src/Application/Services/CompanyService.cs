@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Exceptions;
 using Infrastructure.Contracts;
 
@@ -32,5 +33,14 @@ internal sealed class CompanyService : ICompanyService
         if(company is null) 
             throw new CompanyNotFoundException(id);
         return _mapper.Map<CompanyDto>(company);
+    }
+
+    public CompanyDto CreateCompany(CompanyForCreationDto company)
+    {
+        var companyEntity = _mapper.Map<Company>(company);
+        _repository.Company.CreateCompany(companyEntity);
+        _repository.Save();
+
+        return _mapper.Map<CompanyDto>(companyEntity);
     }
 }
