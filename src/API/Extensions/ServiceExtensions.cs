@@ -1,3 +1,4 @@
+using API.Formatters;
 using Application.Contracts;
 using Application.Services;
 using Infrastructure;
@@ -36,5 +37,8 @@ public static class ServiceExtensions
             {
                 opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
-    
+
+    public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
+        builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));
+
 }
