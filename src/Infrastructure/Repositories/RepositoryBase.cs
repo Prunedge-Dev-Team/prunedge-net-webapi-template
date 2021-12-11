@@ -13,8 +13,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         _appDbContext = appDbContext;
     }
-
-
+    
     public IQueryable<T> FindAll(bool trackChanges) =>
         !trackChanges ? _appDbContext.Set<T>().AsNoTracking() : _appDbContext.Set<T>();
 
