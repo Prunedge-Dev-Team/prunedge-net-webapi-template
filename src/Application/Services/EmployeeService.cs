@@ -54,4 +54,17 @@ public class EmployeeService : IEmployeeService
 
         return _mapper.Map<EmployeeDto>(employeeEntity);
     }
+
+    public void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackingChanges)
+    {
+        var company = _repository.Company.GetCompany(companyId, trackingChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employeeForCompany = _repository.Employee.GetEmployee(companyId, id, trackingChanges);
+        if (employeeForCompany is null)
+            throw new EmployeeNotFoundException(id);
+        _repository.Employee.DeleteEmployee(employeeForCompany);
+        _repository.Save();
+    }
 }
