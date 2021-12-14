@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ModelBinders;
 
 namespace Presentation.Controllers;
 
@@ -34,5 +35,19 @@ public class CompaniesController : ControllerBase
     {
         var createdCompany = _service.CompanyService.CreateCompany(company);
         return CreatedAtRoute("CompanyById", new {id = createdCompany.Id}, createdCompany);
+    }
+
+    [HttpGet("collections/({ids})", Name = "GetCompanyCollection")]
+    public IActionResult GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+    {
+        var companies = _service.CompanyService.GetByIds(ids, trackChanges: false);
+        return Ok(companies);
+    }
+
+    [HttpPost("collection")]
+    public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+    {
+        var result = _service.CompanyService.CreateCompanyCollection(companyCollection);
+        return CreatedAtRoute("GetCompanyCollection", new {result.ids}, result.companies);
     }
 }

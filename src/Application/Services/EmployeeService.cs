@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Exceptions;
 using Infrastructure.Contracts;
 
@@ -39,5 +40,18 @@ public class EmployeeService : IEmployeeService
             throw new EmployeeNotFoundException(id);
 
         return _mapper.Map<EmployeeDto>(employee);
+    }
+
+    public EmployeeDto CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employeeForCreation, bool trackChanges)
+    {
+        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employeeEntity = _mapper.Map<Employee>(employeeForCreation);
+        _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
+        _repository.Save();
+
+        return _mapper.Map<EmployeeDto>(employeeEntity);
     }
 }
