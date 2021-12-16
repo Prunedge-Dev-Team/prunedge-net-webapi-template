@@ -57,4 +57,10 @@ public class CompaniesController : ControllerBase
         _service.CompanyService.DeleteCompany(id, trackChanges: false);
         return NoContent();
     }
+
+    public IActionResult UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
+    {
+        _service.CompanyService.UpdateCompany(id, company, trackChanges: true);
+        return NoContent();
+    }
 }
