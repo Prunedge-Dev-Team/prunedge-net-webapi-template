@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Infrastructure.Contracts;
 using Infrastructure.Data.DbContext;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Shared.RequestFeatures;
 
@@ -15,6 +16,7 @@ public class CompanyRepository : RepositoryBase<Company>, ICompanyRepository
     public async Task<PagedList<Company>> GetAllCompaniesAsync(CompanyParameters parameters, bool trackChanges)
     {
         var companies = await FindAll(trackChanges)
+            .Search(parameters.SearchTerm)
             .OrderBy(c => c.Name)
             .ToListAsync();
         return PagedList<Company>.ToPagedList(companies, parameters.PageNumber, parameters.PageSize);

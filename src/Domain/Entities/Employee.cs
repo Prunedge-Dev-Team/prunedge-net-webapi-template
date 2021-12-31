@@ -19,6 +19,8 @@ public class Employee
     [Required(ErrorMessage = "Position is required")]
     [MaxLength(30, ErrorMessage = "Maximum length for Position is 30 characters")]
     public string? Position { get; set; }
+
+    public int Age { get; set; }
     
     [ForeignKey(nameof(Company))]
     public Guid CompanyId { get; set; }
