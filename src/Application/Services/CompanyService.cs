@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
 using Infrastructure.Contracts;
+using Shared.RequestFeatures;
 
 
 namespace Application.Services;
@@ -29,10 +30,11 @@ internal sealed class CompanyService : ICompanyService
         return company;
     }
 
-    public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
+    public async Task<(IEnumerable<CompanyDto> companies, MetaData metaData)> GetAllCompaniesAsync(CompanyParameters parameters, bool trackChanges)
     {
-        var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges);
-        return _mapper.Map<IEnumerable<CompanyDto>>(companies);
+        var companiesWithMetadata = await _repository.Company.GetAllCompaniesAsync(parameters, trackChanges);
+        var companies =  _mapper.Map<IEnumerable<CompanyDto>>(companiesWithMetadata);
+        return (companies: companies, metaData: companiesWithMetadata.MetaData);
     }
 
     public async Task<CompanyDto> GetCompanyAsync(Guid id, bool trackChanges)

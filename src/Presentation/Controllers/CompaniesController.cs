@@ -1,8 +1,10 @@
+using System.Text.Json;
 using Application.Contracts;
 using Application.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
 using Presentation.ModelBinders;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers;
 
@@ -18,10 +20,12 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCompanies()
+    public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
     {
-        var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
-        return Ok(companies);
+        var pagedResult = await _service.CompanyService.GetAllCompaniesAsync(
+            companyParameters, trackChanges: false);
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+        return Ok(pagedResult.companies);
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]

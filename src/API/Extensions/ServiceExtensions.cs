@@ -11,12 +11,13 @@ namespace API.Extensions;
 public static class ServiceExtensions
 {
     public static void ConfigureCors(this IServiceCollection serviceCollection) => 
-        serviceCollection.AddCors(options => 
-        { 
-            options.AddPolicy("CorsPolicy", builder => 
+        serviceCollection.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()); 
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("X-Pagination"));
         });
 
     public static void ConfigureIisIntegration(this IServiceCollection serviceCollection) =>

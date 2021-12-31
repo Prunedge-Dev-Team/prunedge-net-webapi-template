@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
 using Infrastructure.Contracts;
+using Shared.RequestFeatures;
 
 namespace Application.Services;
 
@@ -35,11 +36,14 @@ public class EmployeeService : IEmployeeService
         return employee;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, bool trackChanges)
+    public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId, EmployeeParameters parameters, 
+        bool trackChanges)
     {
         await CheckIfCompanyExists(companyId, trackChanges);
-        var employees = await _repository.Employee.GetEmployeesAsync(companyId, trackChanges);
-        return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        var employees = await _repository.Employee.GetEmployeesAsync(
+            companyId, parameters, trackChanges);
+        var employeesDto =  _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        return (employees: employeesDto, metaData: employees.MetaData);
     }
 
     public async Task<EmployeeDto> GetEmployeeAsync(Guid companyId, Guid id, bool trackChanges)
@@ -52,7 +56,8 @@ public class EmployeeService : IEmployeeService
         return _mapper.Map<EmployeeDto>(employee);
     }
 
-    public async Task<EmployeeDto> CreateEmployeeForCompanyAsync(Guid companyId, EmployeeForCreationDto employeeForCreation, bool trackChanges)
+    public async Task<EmployeeDto> CreateEmployeeForCompanyAsync(Guid companyId, 
+        EmployeeForCreationDto employeeForCreation, bool trackChanges)
     {
         await CheckIfCompanyExists(companyId, trackChanges);
         var employeeEntity = _mapper.Map<Employee>(employeeForCreation);
