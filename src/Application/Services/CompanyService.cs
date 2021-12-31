@@ -21,6 +21,14 @@ internal sealed class CompanyService : ICompanyService
         _mapper = mapper;
     }
 
+    private async Task<Company> GetCompanyAndCheckIfItExists(Guid id, bool trackChanges)
+    {
+        var company = await _repository.Company.GetCompanyAsync(id, trackChanges);
+        if(company is null) 
+            throw new CompanyNotFoundException(id);
+        return company;
+    }
+
     public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
     {
         var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges);
@@ -29,9 +37,7 @@ internal sealed class CompanyService : ICompanyService
 
     public async Task<CompanyDto> GetCompanyAsync(Guid id, bool trackChanges)
     {
-        var company = await _repository.Company.GetCompanyAsync(id, trackChanges);
-        if(company is null) 
-            throw new CompanyNotFoundException(id);
+        var company = await GetCompanyAndCheckIfItExists(id, trackChanges);
         return _mapper.Map<CompanyDto>(company);
     }
 
@@ -76,18 +82,14 @@ internal sealed class CompanyService : ICompanyService
 
     public async Task DeleteCompanyAsync(Guid companyId, bool trackChanges)
     {
-        var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
-        if (company is null)
-            throw new CompanyNotFoundException(companyId);
+        var company = await GetCompanyAndCheckIfItExists(companyId, trackChanges);
         _repository.Company.DeleteCompany(company);
         await _repository.SaveAsync();
     }
 
     public async Task UpdateCompanyAsync(Guid id, CompanyForUpdateDto companyForUpdate, bool trackChanges)
     {
-        var companyEntity = await _repository.Company.GetCompanyAsync(id, trackChanges);
-        if (companyEntity is null)
-            throw new CompanyNotFoundException(id);
+        var companyEntity = await GetCompanyAndCheckIfItExists(id, trackChanges);
         _mapper.Map(companyForUpdate, companyEntity);
         await _repository.SaveAsync();
     }

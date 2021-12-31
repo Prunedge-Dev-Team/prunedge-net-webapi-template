@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Presentation.ModelBinders;
 
 namespace Presentation.Controllers;
@@ -31,6 +32,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
     {
         var createdCompany = await _service.CompanyService.CreateCompanyAsync(company);
@@ -45,6 +47,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpPost("collection")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
     {
         var result = await _service.CompanyService.CreateCompanyCollectionAsync(companyCollection);
@@ -52,6 +55,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> DeleteCompany(Guid id)
     {
         await _service.CompanyService.DeleteCompanyAsync(id, trackChanges: false);
@@ -59,6 +63,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
     {
         await _service.CompanyService.UpdateCompanyAsync(id, company, trackChanges: true);

@@ -2,6 +2,7 @@ using Application.Contracts;
 using Application.DataTransferObjects;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 
 namespace Presentation.Controllers;
 
@@ -31,11 +32,9 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
         var employeeToReturn =
             await _service.EmployeeService.CreateEmployeeForCompanyAsync(companyId, employee, trackChanges: false);
         return CreatedAtRoute("GetEmployeesForCompany", 
@@ -43,6 +42,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
     {
         await _service.EmployeeService.DeleteEmployeeForCompanyAsync(companyId, id, trackingChanges: false);
@@ -50,6 +50,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
     {
         await _service.EmployeeService.UpdateEmployeeForCompanyAsync(companyId, id, employee, compTrackChanges: false,
@@ -58,6 +59,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPatch("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
         [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
     {
@@ -65,10 +67,7 @@ public class EmployeesController : ControllerBase
             await _service.EmployeeService.GetEmployeeForPatchAsync(companyId, id, compTrackChanges: false, empTrackChanges: true);
         patchDoc.ApplyTo(result.employeeToPatch, ModelState);
         TryValidateModel(result.employeeToPatch);
-        
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
+
         await _service.EmployeeService.SaveChangesForPatchAsync(result.employeeToPatch, result.employeeEntity);
         return NoContent();
     }
