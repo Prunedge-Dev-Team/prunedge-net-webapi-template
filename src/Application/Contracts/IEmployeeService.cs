@@ -1,4 +1,5 @@
 using Application.DataTransferObjects;
+using Domain.Entities;
 
 namespace Application.Contracts;
 
@@ -10,4 +11,9 @@ public interface IEmployeeService
     void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackingChanges);
     void UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdateDto, 
         bool compTrackChanges, bool empTrackChanges);
+
+    (EmployeeForUpdateDto employeeToPatch, Employee employeeEntity) GetEmployeeForPatch(Guid companyId, Guid id,
+        bool compTrackChanges, bool empTrackChanges);
+
+    void SaveChangesForPatch(EmployeeForUpdateDto employeeToPatch, Employee employeeEntity);
 }

@@ -58,6 +58,7 @@ public class CompaniesController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id:guid}")]
     public IActionResult UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
     {
         _service.CompanyService.UpdateCompany(id, company, trackChanges: true);

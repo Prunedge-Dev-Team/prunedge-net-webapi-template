@@ -1,5 +1,6 @@
 using Application.Contracts;
 using Application.DataTransferObjects;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
@@ -50,6 +51,17 @@ public class EmployeesController : ControllerBase
     {
         _service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, compTrackChanges: false,
             empTrackChanges: true);
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}")]
+    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
+        [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+    {
+        var result =
+            _service.EmployeeService.GetEmployeeForPatch(companyId, id, compTrackChanges: false, empTrackChanges: true);
+        patchDoc.ApplyTo(result.employeeToPatch);
+        _service.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employeeEntity);
         return NoContent();
     }
 }
