@@ -21,7 +21,7 @@ public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
                     e => e.CompanyId.Equals(companyId), trackChanges)
                 .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
                 .Search(employeeParameters.SearchTerm)
-                .OrderBy(e => e.LastName)
+                .Sort(employeeParameters.OrderBy)
                 .ToListAsync();
         // var count = await FindByCondition(
         //     e => e.CompanyId.Equals(companyId), trackChanges: false).CountAsync();
