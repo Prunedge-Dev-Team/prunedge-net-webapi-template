@@ -37,7 +37,7 @@ public class CsvOutputFormatter : TextOutputFormatter
         }
         else
         {
-            FormatCsv(buffer, (CompanyDto)context.Object);
+            FormatCsv(buffer, ((CompanyDto)context.Object!)!);
         }
 
         await response.WriteAsync(buffer.ToString());
