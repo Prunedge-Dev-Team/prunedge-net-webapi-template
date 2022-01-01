@@ -10,7 +10,7 @@ public static class RepositoryEmployeeExtensions
 {
     public static IQueryable<Employee> FilterEmployees(this IQueryable<Employee> employees, uint minAge, uint maxAge)
     {
-        return employees.Where(e => (e.Age >= minAge && e.Age <= maxAge));
+        return minAge > 0 ? employees.Where(e => (e.Age >= minAge && e.Age <= maxAge)) : employees;
     }
 
     public static IQueryable<Employee> Search(this IQueryable<Employee> employees, string? searchTerm)

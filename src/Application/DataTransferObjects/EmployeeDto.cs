@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DataTransferObjects;
 
-public record EmployeeDto(Guid Id, string FirstName, string LastName, string Position);
+public record EmployeeDto(Guid Id, string FirstName, string LastName, string Position, int Age);
 
 public record EmployeeForMutationDto
 {
