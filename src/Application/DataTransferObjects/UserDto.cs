@@ -23,3 +23,5 @@ public record UserForLoginDto
     [Required(ErrorMessage = "Email is required")]
     public string? Email { get; init; }
 }
+
+public record TokenDto(string AccessToken, string RefreshToken, DateTime ExpiresIn);

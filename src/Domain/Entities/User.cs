@@ -9,4 +9,6 @@ public class User : IdentityUser
     public bool Verified { get; set; } = false;
     public bool Disabled { get; set; } = false;
     public DateTimeOffset LastLogin { get; set; }
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
 }
