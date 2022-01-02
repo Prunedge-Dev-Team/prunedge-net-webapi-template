@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using Application.DataTransferObjects;
 using AutoMapper;
 using Domain.Entities;
@@ -16,5 +17,6 @@ public class MappingProfile : Profile
         CreateMap<CompanyForCreationDto, Company>();
         CreateMap<EmployeeForCreationDto, Employee>();
         CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
+        CreateMap<UserForRegistrationDto, User>();
     }
 }
