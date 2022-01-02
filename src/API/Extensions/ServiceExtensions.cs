@@ -1,9 +1,11 @@
 using API.Formatters;
 using Application.Contracts;
 using Application.Services;
+using AspNetCoreRateLimit;
 using Infrastructure;
 using Infrastructure.Contracts;
 using Infrastructure.Data.DbContext;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,6 +53,42 @@ public static class ServiceExtensions
             opt.AssumeDefaultVersionWhenUnspecified = true;
             opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
+    }
+
+    public static void ConfigureResponseCaching(this IServiceCollection services) => 
+        services.AddResponseCaching();
+
+    public static void ConfigureHttpCacheHeaders(this IServiceCollection services) => 
+        services.AddHttpCacheHeaders(expirationOpt =>
+        {
+            expirationOpt.MaxAge = 65;
+            expirationOpt.CacheLocation = CacheLocation.Private;
+        }, validationOpt =>
+        {
+
+            validationOpt.MustRevalidate = true;
+        });
+
+    public static void ConfigureRateLimitingOptions(this IServiceCollection services)
+    {
+        var rateLimitingRules = new List<RateLimitRule>
+        {
+            new RateLimitRule
+            {
+                Endpoint = "*",
+                Limit = 10,
+                Period = "5m"
+            }
+        };
+
+        services.Configure<IpRateLimitOptions>(opts =>
+        {
+            opts.GeneralRules = rateLimitingRules;
+        });
+        services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+        services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
     }
 
 }

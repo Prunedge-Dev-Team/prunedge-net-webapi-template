@@ -10,6 +10,7 @@ namespace Presentation.Controllers;
 
 [Route("api/v1/companies")]
 [ApiController]
+// [ResponseCache(CacheProfileName = "120SecondsDuration")]
 public class CompaniesController : ControllerBase
 {
     private readonly IServiceManager _service;

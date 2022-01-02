@@ -1,4 +1,5 @@
 using API.Extensions;
+using AspNetCoreRateLimit;
 using Infrastructure.Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ builder.Services.AddControllers(config =>
         config.RespectBrowserAcceptHeader = true;
         config.ReturnHttpNotAcceptable = true;
         config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+        config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration = 120 });
     })
     .AddXmlDataContractSerializerFormatters()
     .AddCustomCSVFormatter()
@@ -44,6 +46,13 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureVersioning();
+builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureHttpCacheHeaders();
+// Rate Limiting
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimitingOptions();
+builder.Services.AddHttpContextAccessor();
+
 
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerManager>();
@@ -61,7 +70,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.All
 });
+app.UseIpRateLimiting();
 app.UseCors("CorsPolicy");
+app.UseResponseCaching();
+app.UseHttpCacheHeaders();
 app.UseAuthorization();
 
 app.MapControllers();
