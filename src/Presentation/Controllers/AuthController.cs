@@ -31,4 +31,12 @@ public class AuthController : ControllerBase
 
         return StatusCode(201);
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Authenticate([FromBody] UserForLoginDto user)
+    {
+        if (!await _service.AuthenticationService.ValidateUser(user))
+            return Unauthorized();
+        return Ok(new {Token = await _service.AuthenticationService.CreateToken()});
+    }
 }
