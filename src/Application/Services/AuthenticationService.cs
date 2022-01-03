@@ -137,13 +137,13 @@ public class AuthenticationService : IAuthenticationService
         };
 
         var roles = await _userManager.GetRolesAsync(_user);
-        var userRoles = "";
+        var userRoles = new List<string>();
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
-            userRoles = $"{userRoles},roles";
+            userRoles.Add(role);
         }
-        claims.Add(new Claim("Roles", userRoles));
+        claims.Add(new Claim("RolesStr", string.Join(",", userRoles)));
 
         return claims;
     }
