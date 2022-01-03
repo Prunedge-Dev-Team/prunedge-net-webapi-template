@@ -1,11 +1,10 @@
 ﻿using System;
-namespace Domain.Responses
+namespace Domain.Responses;
+
+public abstract class ApiBaseResponse
 {
-	public class ApiBaseResponse
-	{
-		public ApiBaseResponse()
-		{
-		}
-	}
+	public bool Success { get; set; }
+	protected ApiBaseResponse(bool success) => Success = success;
 }
+
 

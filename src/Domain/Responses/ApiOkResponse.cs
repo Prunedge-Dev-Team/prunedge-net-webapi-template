@@ -1,11 +1,13 @@
 ﻿using System;
-namespace Domain.Responses
+namespace Domain.Responses;
+
+public class ApiOkResponse<TResult> : ApiBaseResponse
 {
-	public class ApiOkResponse
+	public TResult Result { get; set; }
+
+	public ApiOkResponse(TResult result) : base(true)
 	{
-		public ApiOkResponse()
-		{
-		}
+		Result = result;
 	}
 }
 
