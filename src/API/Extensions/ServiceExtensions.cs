@@ -3,6 +3,7 @@ using API.Formatters;
 using Application.Contracts;
 using Application.Services;
 using AspNetCoreRateLimit;
+using Domain.ConfigurationModels;
 using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Contracts;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace API.Extensions;
 
@@ -113,9 +115,12 @@ public static class ServiceExtensions
 
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
+        var jwtConfiguration = new JwtConfiguration();
+        configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+        // var jwtSettings = configuration.GetSection("JwtSettings");
         // var secretKey = Environment.GetEnvironmentVariable("JWTSECRET");
-        var secretKey = jwtSettings["secret"];
+        // var secretKey = jwtSettings["secret"];
+        var secretKey = jwtConfiguration.Secret;
 
         services.AddAuthentication(opt =>
         {
@@ -129,10 +134,64 @@ public static class ServiceExtensions
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["validIssuer"],
-                ValidAudience = jwtSettings["validAudience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                ValidIssuer = jwtConfiguration.ValidIssuer,
+                ValidAudience = jwtConfiguration.ValidAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret))
             };
+        });
+    }
+
+    public static void ConfigureSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(s =>
+        {
+            s.SwaggerDoc("v1", new OpenApiInfo {
+                Title = "Prunedge Web API",
+                Version = "v1",
+                Description = "Prunedge Web API Template",
+                TermsOfService = new Uri("https://prunedge.com/terms"),
+                Contact = new OpenApiContact
+                {
+                    Name = "Daniel Ale",
+                    Email = "developer@prunedge.com",
+                    Url = new Uri("https://prunedge.com/danielale")
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "Prunedge API LICX",
+                    Url = new Uri("https://prunedge.com/developer-licence")
+                }
+            });
+            //s.SwaggerDoc("v2", new OpenApiInfo { Title = "Prunedge Web API2", Version = "v2" });
+
+            var xmlFile = $"{typeof(Presentation.AssemblyReference).Assembly.GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            s.IncludeXmlComments(xmlPath);
+
+            s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Add JWT with Bearer",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Name = "Bearer"
+                    },
+                    new List<string>()
+                }
+            });
         });
     }
 

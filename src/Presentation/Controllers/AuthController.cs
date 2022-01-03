@@ -15,6 +15,12 @@ public class AuthController : ControllerBase
         _service = service;
     }
 
+    /// <summary>
+    /// Registers new user
+    /// </summary>
+    /// <param name="userForRegistrationDto"></param>
+    /// <returns>New User</returns>
+
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
     {
@@ -32,6 +38,11 @@ public class AuthController : ControllerBase
         return StatusCode(201);
     }
 
+    /// <summary>
+    /// Logs in user with email and password
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns>Jwt Token</returns>
     [HttpPost("login")]
     public async Task<IActionResult> Authenticate([FromBody] UserForLoginDto user)
     {
@@ -41,5 +52,17 @@ public class AuthController : ControllerBase
         var tokenDto = await _service.AuthenticationService.CreateToken(populateExp: true);
 
         return Ok(tokenDto);
+    }
+
+    /// <summary>
+    /// Refresh access token
+    /// </summary>
+    /// <param name="tokenDto"></param>
+    /// <returns></returns>
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+    {
+        var token = await _service.AuthenticationService.RefreshToken(tokenDto);
+        return Ok(token);
     }
 }
