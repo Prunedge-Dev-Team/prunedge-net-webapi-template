@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Presentation</name>
+    </assembly>
+    <members>
+        <member name="M:Presentation.Controllers.AuthController.RegisterUser(Application.DataTransferObjects.UserForRegistrationDto)">
+            <summary>
+            Registers new user
+            </summary>
+            <param name="userForRegistrationDto"></param>
+            <returns>New User</returns>
+        </member>
+        <member name="M:Presentation.Controllers.AuthController.Authenticate(Application.DataTransferObjects.UserForLoginDto)">
+            <summary>
+            Logs in user with email and password
+            </summary>
+            <param name="user"></param>
+            <returns>Jwt Token</returns>
+        </member>
+        <member name="M:Presentation.Controllers.AuthController.RefreshToken(Application.DataTransferObjects.TokenDto)">
+            <summary>
+            Refresh access token
+            </summary>
+            <param name="tokenDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Presentation.Controllers.CompaniesController.GetCompanies(Shared.RequestFeatures.CompanyParameters)">
+            <summary>
+            Get the list of companies
+            </summary>
+            <param name="companyParameters"></param>
+            <returns>The companies list</returns>
+        </member>
+        <member name="M:Presentation.Controllers.CompaniesController.CreateCompany(Application.DataTransferObjects.CompanyForCreationDto)">
+            <summary>
+            Creates a new company
+            </summary>
+            <param name="company"></param>
+            <returns>New Company</returns>
+            <response code="201">Returns new company</response>
+            <response code="400">If items is null</response>
+            <response code="422">If model is invalid</response>
+        </member>
+    </members>
+</doc>

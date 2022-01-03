@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Application.Contracts;
 using Application.DataTransferObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ActionFilters;
 using Presentation.ModelBinders;
@@ -20,7 +21,13 @@ public class CompaniesController : ControllerBase
         _service = service;
     }
 
+    /// <summary>
+    /// Get the list of companies
+    /// </summary>
+    /// <param name="companyParameters"></param>
+    /// <returns>The companies list</returns>
     [HttpGet]
+    [Authorize(Roles = "Manager")]
     public async Task<IActionResult> GetCompanies([FromQuery] CompanyParameters companyParameters)
     {
         var pagedResult = await _service.CompanyService.GetAllCompaniesAsync(
@@ -36,7 +43,18 @@ public class CompaniesController : ControllerBase
         return Ok(company);
     }
 
+    /// <summary>
+    /// Creates a new company
+    /// </summary>
+    /// <param name="company"></param>
+    /// <returns>New Company</returns>
+    /// <response code="201">Returns new company</response>
+    /// <response code="400">If items is null</response>
+    /// <response code="422">If model is invalid</response>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(422)]
     // [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
     {

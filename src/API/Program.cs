@@ -44,8 +44,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger();
 builder.Services.ConfigureVersioning();
+// Caching
 builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
 // Rate Limiting
@@ -55,6 +56,7 @@ builder.Services.AddHttpContextAccessor();
 // Identity
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 
 var app = builder.Build();
