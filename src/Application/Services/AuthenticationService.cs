@@ -7,6 +7,7 @@ using Application.DataTransferObjects;
 using AutoMapper;
 using Domain.ConfigurationModels;
 using Domain.Entities;
+using Domain.Entities.Identity;
 using Domain.Exceptions;
 using Infrastructure.Contracts;
 using Microsoft.AspNetCore.Identity;

@@ -1,6 +1,7 @@
 using Application.Contracts;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Identity;
 using Infrastructure.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

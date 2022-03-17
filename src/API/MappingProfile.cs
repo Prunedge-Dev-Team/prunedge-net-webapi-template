@@ -2,6 +2,7 @@ using System.Threading.Channels;
 using Application.DataTransferObjects;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Identity;
 
 namespace API;
 
