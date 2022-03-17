@@ -10,14 +10,14 @@ public class Company
 
     [Required(ErrorMessage = "Name is required")]
     [MaxLength(60, ErrorMessage = "Maximum length for Name is 60 characters")]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [Required(ErrorMessage = "Address is required")]
     [MaxLength(200, ErrorMessage = "Maximum length for Address is 200 characters")]
-    public string? Address { get; set; }
+    public string Address { get; set; }
 
-    public string? Country { get; set; }
+    public string Country { get; set; }
     
-    public ICollection<Employee>? Employees { get; set; }
+    public ICollection<Employee> Employees { get; set; }
 
 }

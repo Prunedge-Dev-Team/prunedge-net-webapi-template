@@ -20,7 +20,6 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="userForRegistrationDto"></param>
     /// <returns>New User</returns>
-
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
     {
