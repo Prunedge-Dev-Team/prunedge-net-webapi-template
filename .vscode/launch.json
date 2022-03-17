@@ -1,35 +1,50 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            // Use IntelliSense to find out which attributes exist for C# debugging
-            // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-            "name": ".NET Core Launch (web)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/API/bin/Debug/net6.0/API.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/API",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug SST",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/sst",
+      "runtimeArgs": ["dev", "--increase-timeout"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      // sourceMapRenames helps with the loading spinner when debugging and viewing local variables
+      "sourceMapRenames": false,
+      "env": {
+        "AWS_PROFILE": "flo-ct-flo360"
+      }
+    },
+    {
+      "name": "Debug Tests - Unit",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/sst",
+      "runtimeArgs": ["bind", "yarn", "\"jest\"", "\"--watch\"", "\"--config\"", "\"./jest.unit.config.cjs\"", "\"${input:scopeTestsFileName}\""],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "AWS_PROFILE": "flo-ct-flo360"
+      },
+    },
+    {
+      "name": "Debug Tests - E2E",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/sst",
+      "runtimeArgs": ["bind", "yarn", "\"vitest\"", "\"--config\"", "\"./vitest.e2e.config.ts\"", "\"${input:scopeTestsFileName}\""],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "AWS_PROFILE": "flo-ct-flo360"
+      },
+    },
+  ],
+  "inputs": [
+    {
+      "id": "scopeTestsFileName",
+      "type": "promptString",
+      "description": "Partial file name to scope test debugging to. ex. arena. Leave blank to run all tests.",
+    }
+  ]
 }
