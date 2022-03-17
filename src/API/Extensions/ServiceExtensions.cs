@@ -5,6 +5,7 @@ using Application.Services;
 using AspNetCoreRateLimit;
 using Domain.ConfigurationModels;
 using Domain.Entities;
+using Domain.Entities.Identity;
 using Infrastructure;
 using Infrastructure.Contracts;
 using Infrastructure.Data.DbContext;
